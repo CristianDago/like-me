@@ -16,11 +16,24 @@ const obtenerPosts = async() => {
   return rows;
 };
 
-
 const crearPost = async (titulo, img, descripcion) => {
   const consulta = "INSERT INTO posts VALUES (DEFAULT, $1, $2, $3)";
   const valores = [titulo, img, descripcion];
   const result = await pool.query(consulta, valores);
 };
+
+const modificarPosts = async (id) => {
+  const consulta = 'UPDATE posts SET likes = (case when likes IS NULL then 1 else likes + 1 end) WHERE id = $1;';
+  const valores = [id];
+  const result = await pool.query(consulta, valores);
+  return result;
+ };
+
+ const eliminarPost = async(id) => {
+  const consulta = 'DELETE FROM posts WHERE id = $1';
+  const valores = [id];
+  const result = await pool.query(consulta, valores);
+};
+
  
-module.exports = { obtenerPosts, crearPost };
+module.exports = { obtenerPosts, crearPost, modificarPosts, eliminarPost };
